@@ -1,0 +1,29 @@
+﻿<Properties StartupConfiguration="{CBF108B0-232C-4596-9284-819752263D86}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Test/EntityFramework/AppDB.cs">
+    <Files>
+      <File FileName="Test/EntityFramework/AppDB.cs" Line="42" Column="37" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Test" expanded="True">
+            <Node name="Test" expanded="True">
+              <Node name="EntityFramework" expanded="True">
+                <Node name="AppDB.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.Test.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.E1F98726-ED12-4CDB-A936-AC0FA9D042DD" automaticSigning="False" />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.Test.Android PreferredExecutionTarget="Android.Android_Accelerated_Oreo" AndroidDesignerPreferredTheme="Theme.DeviceDefault.NoActionBar.Fullscreen" />
+  <MonoDevelop.Ide.ItemProperties.Test.Mac PreferredExecutionTarget="Test1" />
+</Properties>

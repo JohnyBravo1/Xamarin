@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:local="clr-namespace:Test.ViewModels" 
+             x:Class="Test.MainPage">
+    <StackLayout VerticalOptions="CenterAndExpand">
+        
+        <ContentPage.Resources>
+            
+            <ResourceDictionary>
+                
+                <OnPlatform x:Key="boxSize" x:TypeArguments="x:Double">
+                    <On Platform="iOS, Android, UWP" Value="50" />
+                </OnPlatform>
+                
+                <OnPlatform x:Key="rowHeight" x:TypeArguments="x:Double">
+                    <On Platform="iOS, Android, UWP" Value="60" />
+                </OnPlatform>
+                
+                <local:MainVM x:Key="vm" />
+                
+            </ResourceDictionary>
+            
+        </ContentPage.Resources>
+        
+        <ListView x:Name="response" 
+                  ItemSelected="onItemSelected"
+                  ItemsSource="{Binding Items}">
+            
+            <ListView.ItemTemplate>
+                
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal">
+                            <BoxView WidthRequest="{StaticResource boxSize}" 
+                                     HeightRequest="{StaticResource rowHeight}"
+                                     Color="Teal" />
+                            <Label Text="{Binding Name}" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+                
+            </ListView.ItemTemplate>
+            
+        </ListView>
+        
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+            <Button Text="Sort" Clicked="sort"></Button>
+            <Button Text="API" Clicked="apiCallAsync"></Button>
+        </StackLayout>
+        
+        <ListView x:Name="sorted"
+                  ItemSelected="onItemSelected"
+                  ItemsSource="{Binding Sorted}">
+            
+            <ListView.ItemTemplate>
+                
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal">
+                            <BoxView WidthRequest="{StaticResource boxSize}"
+                                     HeightRequest="{StaticResource rowHeight}"
+                                     Color="Silver" />
+                            <Label Text="{Binding}" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+                
+            </ListView.ItemTemplate>
+            
+        </ListView>
+    </StackLayout>
+</ContentPage>
