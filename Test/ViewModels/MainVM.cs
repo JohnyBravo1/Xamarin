@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Test.EntityFramework;
+using Test.Network;
 using Xamarin.Forms;
 
 namespace Test.ViewModels
@@ -57,13 +58,13 @@ namespace Test.ViewModels
 
         private ObservableCollection<City> _items;
         private ObservableCollection<string> _sorted;
-        private Network _network;
+        private AppNetwork _network;
 
         public MainVM()
         {
             this._items = new ObservableCollection<City>();
             this._sorted = new ObservableCollection<string>();
-            this._network = new Network();
+            this._network = new AppNetwork();
 
             using (var db = new AppDB())
             {
@@ -81,7 +82,7 @@ namespace Test.ViewModels
 
         public async void requestItems()
         {
-            ArrayList list = await this._network.GETAsync("http://192.168.33.10/Test/index.php/json");
+            ArrayList list = await this._network.GETAsync(APIEndPoint.JSONCall);
 
             if (list == null) {
 

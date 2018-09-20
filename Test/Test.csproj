@@ -22,5 +22,6 @@
   <ItemGroup>
     <Folder Include="ViewModels\" />
     <Folder Include="EntityFramework\" />
+    <Folder Include="Network\" />
   </ItemGroup>
 </Project>

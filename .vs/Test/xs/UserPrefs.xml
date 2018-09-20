@@ -1,15 +1,14 @@
 ﻿<Properties StartupConfiguration="{CBF108B0-232C-4596-9284-819752263D86}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Test/EntityFramework/AppDB.cs">
-    <Files>
-      <File FileName="Test/EntityFramework/AppDB.cs" Line="42" Column="37" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="Test" expanded="True">
             <Node name="Test" expanded="True">
-              <Node name="EntityFramework" expanded="True">
-                <Node name="AppDB.cs" selected="True" />
+              <Node name="EntityFramework" expanded="True" />
+              <Node name="Network" expanded="True" />
+              <Node name="ViewModels" expanded="True">
+                <Node name="MainVM.cs" selected="True" />
               </Node>
             </Node>
           </Node>

@@ -4,13 +4,19 @@ using System.Net.Http;
 using System.Collections;
 using Newtonsoft.Json;
 
-namespace Test
+namespace Test.Network
 {
-    public class Network 
+    public enum APIEndPoint
     {
+        JSONCall
+    }
+
+    public class AppNetwork 
+    {
+        private string _baseURL = "http://192.168.33.10/Test/index.php/";
         private HttpClient _client;
 
-        public async System.Threading.Tasks.Task<ArrayList> GETAsync(String uri)
+        public async System.Threading.Tasks.Task<ArrayList> GETAsync(APIEndPoint endPoint)
         {
             ArrayList result = null;
             HttpResponseMessage message = null;
@@ -19,6 +25,7 @@ namespace Test
 
             try {
 
+                var uri = this.constructURI(endPoint);
                 message = await this._client.GetAsync(uri);
             }
             catch (Exception e) {
@@ -45,6 +52,18 @@ namespace Test
             this._client = null;
 
             return result;
+        }
+
+        private string constructURI(APIEndPoint endPoint)
+        {
+            string result = null;
+
+            switch(endPoint) {
+
+                case APIEndPoint.JSONCall: { result = $"{this._baseURL}/json"; } break;
+            }
+
+            return (result);
         }
     }
 }
