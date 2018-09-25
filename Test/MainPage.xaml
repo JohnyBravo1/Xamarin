@@ -17,15 +17,15 @@
                     <On Platform="iOS, Android, UWP" Value="60" />
                 </OnPlatform>
                 
-                <local:MainVM x:Key="vm" />
+<!--                <local:MainVM x:Key="vm" />-->
                 
             </ResourceDictionary>
             
         </ContentPage.Resources>
         
-        <ListView x:Name="response" 
-                  ItemSelected="onItemSelected"
-                  ItemsSource="{Binding Items}">
+        <ListView x:Name="ListViewCities" 
+                  ItemSelected="OnCitySelected"
+                  ItemsSource="{Binding Cities}">
             
             <ListView.ItemTemplate>
                 
@@ -45,13 +45,13 @@
         </ListView>
         
         <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-            <Button Text="Sort" Clicked="sort"></Button>
-            <Button Text="API" Clicked="apiCallAsync"></Button>
+            <Button Text="Cities" Clicked="RequestCities"></Button>
+            <Button Text="Regions" Clicked="RequestRegions"></Button>
         </StackLayout>
         
-        <ListView x:Name="sorted"
-                  ItemSelected="onItemSelected"
-                  ItemsSource="{Binding Sorted}">
+        <ListView x:Name="ListViewRegions"
+                  ItemSelected="OnRegionSelected"
+                  ItemsSource="{Binding Regions}">
             
             <ListView.ItemTemplate>
                 
@@ -61,7 +61,7 @@
                             <BoxView WidthRequest="{StaticResource boxSize}"
                                      HeightRequest="{StaticResource rowHeight}"
                                      Color="Silver" />
-                            <Label Text="{Binding}" />
+                            <Label Text="{Binding Name}" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

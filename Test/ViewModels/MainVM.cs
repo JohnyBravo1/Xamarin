@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Test.EntityFramework;
@@ -10,17 +11,17 @@ namespace Test.ViewModels
 {
     public class MainVM: INotifyPropertyChanged
     {
-        public ObservableCollection<City> Items
+        public ObservableCollection<EFCity> Cities
         {
             get
             {
-                return (this._items);
+                return (this._cities);
             }
             set
             {
-                if (this._items != value)
+                if (this._cities != value)
                 {
-                    this._items = value;
+                    this._cities = value;
 
                     PropertyChangedEventHandler handler = this.PropertyChanged;
 
@@ -32,17 +33,17 @@ namespace Test.ViewModels
             }
         }
 
-        public ObservableCollection<string> Sorted
+        public ObservableCollection<EFRegion> Regions
         {
             get
             {
-                return (this._sorted);
+                return (this._regions);
             }
             set
             {
-                if (this._sorted != value)
+                if (this._regions != value)
                 {
-                    this._sorted = value;
+                    this._regions = value;
 
                     PropertyChangedEventHandler handler = this.PropertyChanged;
 
@@ -56,73 +57,73 @@ namespace Test.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private ObservableCollection<City> _items;
-        private ObservableCollection<string> _sorted;
+        private ObservableCollection<EFCity> _cities;
+        private ObservableCollection<EFRegion> _regions;
         private AppNetwork _network;
 
         public MainVM()
         {
-            this._items = new ObservableCollection<City>();
-            this._sorted = new ObservableCollection<string>();
+            this._cities = new ObservableCollection<EFCity>();
+            this._regions = new ObservableCollection<EFRegion>();
             this._network = new AppNetwork();
 
             using (var db = new AppDB())
             {
-                foreach (City city in db.Cities)
+                foreach (EFCity city in db.Cities)
                 {
-                    this.Items.Add(city);
+                    this.Cities.Add(city);
                 }
             }
 
-            if (this.Items.Count == 0)
+            if (this.Cities.Count == 0)
             {
-                this.requestItems();
+                this.RequestCities();
             }
         }
 
-        public async void requestItems()
+        public async void RequestCities()
         {
-            ArrayList list = await this._network.GETAsync(APIEndPoint.JSONCall);
+            IList<EFCity> cities = await this._network.requestCities();
 
-            if (list == null) {
+            if (cities == null) {
 
+                MessagingCenter.Send<MainVM>(this, "RequestFailed");
                 return;
             }
 
             using (var db = new AppDB())
             {
                 db.ClearCities();
-                this.Items.Clear();
+                this.Cities.Clear();
 
-                for (int itemIndex = 0; itemIndex < list.Count; itemIndex++)
+                foreach (EFCity city in cities)
                 {
-                    object o = list[itemIndex];
+                    db.Add<EFCity>(city);
 
-                    var city = new City { Name = o.ToString() };
-                    db.Add(city);
-                    db.ClearCities();
-
-                    this.Items.Add(city);
+                    this.Cities.Add(city);
                 }
             }
         }
 
-        public void sort()
+        public async void RequestRegions()
         {
-            if (this._items == null || this._items.Count == 0)
-            {
+            IList<EFRegion> regions = await this._network.requestRegions();
+
+            if (regions == null) {
+
+                MessagingCenter.Send<MainVM>(this, "RequestFailed");
                 return;
             }
 
-            City[] arr = new City[this._items.Count];
-            this._items.CopyTo(arr, 0);
-
-            Array.Sort<City>(arr);
-
-            this.Sorted.Clear();
-            foreach (var city in arr)
+            using (var db = new AppDB())
             {
-                this.Sorted.Add(city.Name);
+                db.ClearRegions();
+                foreach (EFRegion region in regions)
+                {
+                    db.Add<EFRegion>(region);
+
+                    this.Regions.Add(region);
+                }
             }
         }
     }

@@ -2,26 +2,38 @@
 
 using System.Net.Http;
 using System.Collections;
-using Newtonsoft.Json;
+using System.Collections.Generic;
+using Test.EntityFramework;
 
 namespace Test.Network
 {
     public enum APIEndPoint
     {
-        JSONCall
+        Cities,
+        Regions
     }
 
-    public class AppNetwork 
+    public partial class AppNetwork
     {
-        private string _baseURL = "http://192.168.33.10/Test/index.php/";
+        private AppNetMarshaller _marshaller;
         private HttpClient _client;
+        private string _baseURL = "http://192.168.33.10/Test/index.php";
 
-        public async System.Threading.Tasks.Task<ArrayList> GETAsync(APIEndPoint endPoint)
+        public AppNetwork()
         {
-            ArrayList result = null;
-            HttpResponseMessage message = null;
-
             this._client = new HttpClient();
+            this._marshaller = new AppNetMarshaller();
+        }
+
+        public void cancelPending()
+        {
+            this._client.CancelPendingRequests();
+        }
+
+        protected async System.Threading.Tasks.Task<string> GETAsync(APIEndPoint endPoint)
+        {
+            HttpResponseMessage message = null;
+            string result = null;
 
             try {
 
@@ -35,23 +47,40 @@ namespace Test.Network
 
             if (message == null || message.IsSuccessStatusCode) {
 
-                var content = await message.Content.ReadAsStringAsync();
-
-                try {
-
-                    result = JsonConvert.DeserializeObject<ArrayList>(content);
-                }
-                catch (Exception e) {
-
-                    Console.WriteLine("FAILED TO READ JSON: {0}", e.Message);
-                    result = null;
-                }
+                result = await message.Content.ReadAsStringAsync();
             }
 
-            this._client.CancelPendingRequests();
-            this._client = null;
-
             return result;
+        }
+
+        protected System.Threading.Tasks.Task<string> POSTAsync(APIEndPoint endPoint)
+        {
+            return (this.POSTAsync(endPoint, null));
+        }
+
+        protected async System.Threading.Tasks.Task<string> POSTAsync(APIEndPoint endPoint, IDictionary<string, string> body)
+        {
+            HttpResponseMessage message = null;
+            string result = null;
+            string uri = this.constructURI(endPoint);
+
+            if (body == null)
+            {
+                body = new Dictionary<string, string>();
+            }
+            try {
+
+                var postBody = new FormUrlEncodedContent(body);
+                message = await this._client.PostAsync(uri, postBody);
+
+                result = await message.Content.ReadAsStringAsync();
+            }
+            catch (Exception e) {
+
+                Console.WriteLine("FAILED TO POST TO: {0}", e.Message);
+            }
+
+            return (result);
         }
 
         private string constructURI(APIEndPoint endPoint)
@@ -60,7 +89,8 @@ namespace Test.Network
 
             switch(endPoint) {
 
-                case APIEndPoint.JSONCall: { result = $"{this._baseURL}/json"; } break;
+                case APIEndPoint.Cities: { result = $"{this._baseURL}/json"; } break;
+                case APIEndPoint.Regions: { result = $"{this._baseURL}/regions"; } break;
             }
 
             return (result);

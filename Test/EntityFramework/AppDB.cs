@@ -1,53 +1,67 @@
 ﻿using System;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Extensions;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Test.EntityFramework
 {
     public class AppDB: DbContext
     {
         public static string DBPath { get; set; }
-
-        public DbSet<City> Cities { get; set; }
-        public DbSet<Region> Regions { get; set; }
         private static Boolean _schemaCreated = false;
-        private string _dbPath;
+
+        public DbSet<EFCity> Cities { get; set; }
+        public DbSet<EFRegion> Regions { get; set; }
 
         public AppDB()
         {
-            _schemaCreated = Database.EnsureCreated();
+            if (_schemaCreated == false)
+            {
+                _schemaCreated = Database.EnsureCreated();
+            }
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options) 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
         {
-            options.UseSqlite($"Filename={DBPath}");
+            optionsBuilder.UseSqlite($"Filename={DBPath}");
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            builder.Entity<City>().HasKey(city => city.ID);
-            builder.Entity<Region>().HasKey(region => region.ID);
         }
 
         public void ClearCities()
         {
-            foreach (City city in this.Cities)
+            foreach (EFCity city in this.Cities)
             {
-                this.Remove<City>(city);
+                this.Remove<EFCity>(city);
+            }
+        }
+
+        public void ClearRegions()
+        {
+            foreach (EFRegion region in this.Regions)
+            {
+                this.Remove<EFRegion>(region);
             }
         }
     }
 
-    public class City : IComparable
+    public class EFCity : IComparable
     {
         public int ID { get; set; }
         public String Name { get; set; }
+        public int RegionID { get; set; }
+
+        [ForeignKey("RegionID")]
+        public EFRegion region;
 
         public int CompareTo(object obj)
         {
             var result = 0;
-            var another = obj as City;
+            var another = obj as EFCity;
 
             if (another != null)
             {
@@ -56,19 +70,23 @@ namespace Test.EntityFramework
 
             return (result);
         }
+
+        public void LinkToRegion(EFRegion region)
+        {
+            region.AppendCity(this);
+        }
     }
 
-    public class Region: IComparable
+    public class EFRegion: IComparable
     {
         public int ID { get; set; }
         public String Name { get; set; }
-
-        //private City city;
+        public List<EFCity> cities;
 
         public int CompareTo(object obj)
         {
             int result = 0;
-            var another = obj as Region;
+            var another = obj as EFRegion;
 
             if (another != null)
             {
@@ -76,6 +94,17 @@ namespace Test.EntityFramework
             }
 
             return (result);
+        }
+
+        public void AppendCity(EFCity city)
+        {
+            if (this.cities == null) {
+
+                this.cities = new List<EFCity>();
+            }
+
+            this.cities.Add(city);
+            city.region = this;
         }
     }
 }

@@ -1,21 +1,5 @@
-﻿<Properties StartupConfiguration="{CBF108B0-232C-4596-9284-819752263D86}|Default">
-  <MonoDevelop.Ide.Workbench>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="Test" expanded="True">
-            <Node name="Test" expanded="True">
-              <Node name="EntityFramework" expanded="True" />
-              <Node name="Network" expanded="True" />
-              <Node name="ViewModels" expanded="True">
-                <Node name="MainVM.cs" selected="True" />
-              </Node>
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
-  </MonoDevelop.Ide.Workbench>
+﻿<Properties StartupConfiguration="{7009CEA3-386D-45B0-AAB5-00B5D5E531AA}|Default">
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
@@ -24,5 +8,4 @@
   <MonoDevelop.Ide.ItemProperties.Test.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.E1F98726-ED12-4CDB-A936-AC0FA9D042DD" automaticSigning="False" />
   <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.ItemProperties.Test.Android PreferredExecutionTarget="Android.Android_Accelerated_Oreo" AndroidDesignerPreferredTheme="Theme.DeviceDefault.NoActionBar.Fullscreen" />
-  <MonoDevelop.Ide.ItemProperties.Test.Mac PreferredExecutionTarget="Test1" />
 </Properties>
