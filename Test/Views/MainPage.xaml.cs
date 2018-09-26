@@ -44,7 +44,12 @@ namespace Test
 
             if (region != null) {
 
-                vm.Cities = new ObservableCollection<EFCity>(region.cities);
+                vm.Cities.Clear();
+
+                foreach (EFCity city in region.cities)
+                {
+                    vm.Cities.Add(city);
+                }
             }
         }
 
