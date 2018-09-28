@@ -7,6 +7,7 @@
     
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+            <Label x:Name="lblCityName" HorizontalOptions="Center" />
             <Label HorizontalOptions="Center" Text="{Binding Path=CurrentTime, StringFormat='{0}'}">
                 <Label.BindingContext>
                     <local:ViewModels.ClockVM />

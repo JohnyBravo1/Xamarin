@@ -17,57 +17,22 @@
                     <On Platform="iOS, Android, UWP" Value="60" />
                 </OnPlatform>
                 
-<!--                <local:MainVM x:Key="vm" />-->
-                
             </ResourceDictionary>
             
         </ContentPage.Resources>
         
-        <ListView x:Name="ListViewCities" 
+        <ListView x:Name="listView"
+                  ItemsSource="{Binding GroupedList}" 
                   ItemSelected="OnCitySelected"
-                  ItemsSource="{Binding Cities}">
-            
+                  GroupDisplayBinding="{Binding Header}"
+                  GroupShortNameBinding="{Binding ShortHeader}"
+                  IsGroupingEnabled="true">
             <ListView.ItemTemplate>
-                
                 <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Orientation="Horizontal">
-                            <BoxView WidthRequest="{StaticResource boxSize}" 
-                                     HeightRequest="{StaticResource rowHeight}"
-                                     Color="Teal" />
-                            <Label Text="{Binding Name}" />
-                        </StackLayout>
-                    </ViewCell>
+                    <TextCell Text="{Binding Name}" Detail="A City in the region" />
                 </DataTemplate>
-                
             </ListView.ItemTemplate>
-            
         </ListView>
         
-        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-            <Button Text="Cities" Clicked="RequestCities"></Button>
-            <Button Text="Regions" Clicked="RequestRegions"></Button>
-        </StackLayout>
-        
-        <ListView x:Name="ListViewRegions"
-                  ItemSelected="OnRegionSelected"
-                  ItemsSource="{Binding Regions}">
-            
-            <ListView.ItemTemplate>
-                
-                <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Orientation="Horizontal">
-                            <BoxView WidthRequest="{StaticResource boxSize}"
-                                     HeightRequest="{StaticResource rowHeight}"
-                                     Color="Silver" />
-                            <Label Text="{Binding Name}" />
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-                
-            </ListView.ItemTemplate>
-            
-        </ListView>
     </StackLayout>
 </ContentPage>

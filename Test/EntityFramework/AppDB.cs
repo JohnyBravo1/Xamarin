@@ -80,8 +80,8 @@ namespace Test.EntityFramework
     public class EFRegion: IComparable
     {
         public int ID { get; set; }
+        public List<EFCity> Cities { get; set; }
         public String Name { get; set; }
-        public List<EFCity> cities;
 
         public int CompareTo(object obj)
         {
@@ -98,12 +98,12 @@ namespace Test.EntityFramework
 
         public void AppendCity(EFCity city)
         {
-            if (this.cities == null) {
+            if (this.Cities == null) {
 
-                this.cities = new List<EFCity>();
+                this.Cities = new List<EFCity>();
             }
 
-            this.cities.Add(city);
+            this.Cities.Add(city);
             city.region = this;
         }
     }

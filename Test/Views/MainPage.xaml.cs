@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections;
@@ -17,47 +18,21 @@ namespace Test
         {
             InitializeComponent();
 
-            this.BindingContext = new ViewModels.MainVM();
+            MainVM vm = new MainVM();
+            this.BindingContext = vm;
 
-            MessagingCenter.Subscribe<Test.ViewModels.MainVM>(this, "RequestFailed", (sender) =>
+            MessagingCenter.Subscribe<MainVM>(this, "RequestFailed", (sender) =>
             {
                 DisplayAlert("Failed to process request", "", "Ok");
+                vm.RequestRegions();
             });
         }
 
-        void RequestCities(object sender, System.EventArgs e)
+        public async void OnCitySelected(object sender, EventArgs e)
         {
-            ViewModels.MainVM vm = this.BindingContext as ViewModels.MainVM;
-
-            vm.RequestCities();
-        }
-
-        async void OnCitySelected(object sender, System.EventArgs e)
-        {
-            await this.Navigation.PushAsync(new Clock());
-        }
-
-        void OnRegionSelected(object sender, System.EventArgs e)
-        {
-            ViewModels.MainVM vm = this.BindingContext as ViewModels.MainVM;
-            EFRegion region = this.ListViewRegions.SelectedItem as EFRegion;
-
-            if (region != null) {
-
-                vm.Cities.Clear();
-
-                foreach (EFCity city in region.cities)
-                {
-                    vm.Cities.Add(city);
-                }
-            }
-        }
-
-        void RequestRegions(object sender, System.EventArgs e)
-        {
-            ViewModels.MainVM vm = this.BindingContext as ViewModels.MainVM;
-
-            vm.RequestRegions();
+            Clock cityClock = new Clock();
+            cityClock.BindingContext = this.listView.SelectedItem as EFCity;
+            await this.Navigation.PushAsync(cityClock);
         }
     }
 }

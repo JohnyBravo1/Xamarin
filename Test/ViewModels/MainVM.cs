@@ -9,99 +9,42 @@ using Xamarin.Forms;
 
 namespace Test.ViewModels
 {
+    public class CitiesList: List<EFCity>
+    {
+        public string Header { get; set; }
+        public string ShortHeader { get; set; }
+
+        public List<EFCity> cities => this;
+    }
+
     public class MainVM: INotifyPropertyChanged
     {
-        public ObservableCollection<EFCity> Cities
-        {
-            get
-            {
-                return (this._cities);
-            }
-            set
-            {
-                if (this._cities != value)
-                {
-                    this._cities = value;
-
-                    PropertyChangedEventHandler handler = this.PropertyChanged;
-
-                    if (handler != null)
-                    {
-                        handler(this, new PropertyChangedEventArgs("Items"));
-                    }
-                }
-            }
-        }
-
-        public ObservableCollection<EFRegion> Regions
-        {
-            get
-            {
-                return (this._regions);
-            }
-            set
-            {
-                if (this._regions != value)
-                {
-                    this._regions = value;
-
-                    PropertyChangedEventHandler handler = this.PropertyChanged;
-
-                    if (handler != null)
-                    {
-                        handler(this, new PropertyChangedEventArgs("Sorted"));
-                    }
-                }
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private ObservableCollection<EFCity> _cities;
-        private ObservableCollection<EFRegion> _regions;
+        public ObservableCollection<CitiesList> GroupedList { get; set; }
+
         private AppNetwork _network;
+        private IList<EFRegion> _regions;
 
         public MainVM()
         {
-            this._cities = new ObservableCollection<EFCity>();
-            this._regions = new ObservableCollection<EFRegion>();
+            this._regions = new List<EFRegion>();
             this._network = new AppNetwork();
 
             using (var db = new AppDB())
             {
-                foreach (EFCity city in db.Cities)
+                foreach (EFRegion region in db.Regions)
                 {
-                    this.Cities.Add(city);
+                    this._regions.Add(region);
                 }
             }
-
-            if (this.Cities.Count == 0)
+            if (this._regions.Count == 0)
             {
-                this.RequestCities();
+                this.RequestRegions();
             }
-        }
-
-        public async void RequestCities()
-        {
-            IList<EFCity> cities = await this._network.requestCities();
-
-            if (cities == null) {
-
-                MessagingCenter.Send<MainVM>(this, "RequestFailed");
-                return;
-            }
-
-            using (var db = new AppDB())
+            else
             {
-                db.ClearCities();
-                this.Cities.Clear();
-
-                foreach (EFCity city in cities)
-                {
-                    db.Add<EFCity>(city);
-
-                    this.Cities.Add(city);
-                }
+                this._constructGroupedList();
             }
         }
 
@@ -109,8 +52,8 @@ namespace Test.ViewModels
         {
             IList<EFRegion> regions = await this._network.requestRegions();
 
-            if (regions == null) {
-
+            if (regions == null)
+            {
                 MessagingCenter.Send<MainVM>(this, "RequestFailed");
                 return;
             }
@@ -118,12 +61,50 @@ namespace Test.ViewModels
             using (var db = new AppDB())
             {
                 db.ClearRegions();
+                this._regions.Clear();
+
                 foreach (EFRegion region in regions)
                 {
                     db.Add<EFRegion>(region);
 
-                    this.Regions.Add(region);
+                    this._regions.Add(region);
                 }
+            }
+
+            this._constructGroupedList();
+
+            MessagingCenter.Send<MainVM>(this, "RegionsResponse");
+        }
+
+        private void _constructGroupedList()
+        {
+            if (this.GroupedList == null)
+            {
+                this.GroupedList = new ObservableCollection<CitiesList>();
+            }
+            else
+            {
+                this.GroupedList.Clear();
+            }
+
+            CitiesList list;
+
+            foreach (EFRegion region in this._regions)
+            {
+                list = new CitiesList();
+
+                list.AddRange(region.Cities);
+                list.Header = region.Name;
+                list.ShortHeader = region.Name.Substring(0, 1).ToUpper();
+
+                this.GroupedList.Add(list);
+            }
+
+            PropertyChangedEventHandler handler = this.PropertyChanged;
+
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs("GroupedList"));
             }
         }
     }
